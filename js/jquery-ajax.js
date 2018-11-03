@@ -40,10 +40,27 @@
   // Check out the dog.ceo API here: https://dog.ceo/dog-api/
   //
   // 1) Add a click event to the "Generate Doggo" button
+    $('#generateDoggoBtn').click(clickDoggoBtn)
+
+    const randomDogURL = 'https://dog.ceo/api/breeds/image/random'
   //
   // 2) In your event handler, make an AJAX request to https://dog.ceo/api/breeds/image/random
   //    which will return JSON data.
   //    Hint: there is a very convenient jQuery method for getting JSON data
+  function clickDoggoBtn () {
+    console.log('You clicked the Doggo button')
+    $.getJSON(randomDogURL, receiveRandomDog)
+    $('#generateDoggoBtn').html('Generating Doggo ...').attr('disabled', 'disabled')
+  }
+
+  function receiveRandomDog (data) {
+    console.log('successfully received dog:')
+    console.log(data)
+    $('#doggoContainer').html(`<img src="${data.message}"/>`)
+    $('#generateDoggoBtn').html('Generate Doggo').removeAttr('disabled')
+  }
+
+
   //
   // 3) Look at the Network tab in Chrome Dev Tools and confirm that an HTTP request
   //    is being sent every time you click the "Generate Doggo" button.
@@ -71,7 +88,37 @@
   //
 
   // TODO: your code goes here :)
+$('#selectBreedContainer').html('<select></select>')
 
+const dogBreedList = 'https://dog.ceo/api/breeds/list'
+
+$.get({url: dogBreedList, success: dogBreedSuccess })
+
+function dogBreedSuccess (data) {
+  console.log(data)
+  $.each(data.message, addDogBreed)
+}
+
+function addDogBreed (index, value) {
+  $(`<option value=${value}>${value}</option>`).appendTo('select')
+}
+
+
+
+
+$('select').on('change', getDogBreedImg)
+
+function getDogBreedImg () {
+  console.log(this.value)
+  $('#selectBreedContainer').append('<img id="selectedDog" src="">')
+  const dogBreedImg = `https://dog.ceo/api/breed/${this.value}/images/random`
+  $.get({url: dogBreedImg, success: gotDogBreedImg})
+}
+
+function gotDogBreedImg (data) {
+  console.log(data)
+  $('#selectedDog').attr('src', data.message)
+}
   //
   // Cool. Now let's kick it up a notch and allow selecting a specific breed of dog!
   //

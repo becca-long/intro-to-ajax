@@ -92,6 +92,34 @@
   //
 
   // TODO: your code goes here :)
+  $('#generateCatBtn').click(clickBtn)
+
+
+
+  const randomCatURL = 'https://api.thecatapi.com/v1/images/search?size=full&mime_types=jpg&format=json&has_breeds=1&order=RANDOM&page=0&limit=1'
+
+  function clickBtn () {
+    console.info('Sending the AJAX request now using fetch')
+    $('#generateCatBtn').html('Generating Cat Image').attr('disabled', 'disabled')
+    fetch(randomCatURL, {
+      headers: {'x-api-key': '0fb689a1-8301-470d-87e8-390e05929a2c'}
+    })
+      .then(convertToJSON)
+      .then(displayCatImg)
+  }
+
+  function convertToJSON (response) {
+    console.log('AJAX request finished. This is the callback for first Promise object.')
+    console.log('response', response)
+    return response.json()
+  }
+
+  function displayCatImg (responseJSON) {
+    console.log('response', responseJSON)
+    console.log(responseJSON.url)
+    $('#catContainer').html(`<img src="${responseJSON[0].url}"/>`)
+    $('#generateCatBtn').html('Generate Cat').removeAttr('disabled')
+  }
 
   //
   // What else can you build with your new AJAX knowledge?
